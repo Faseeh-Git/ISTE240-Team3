@@ -14,9 +14,9 @@ public class Enrollment {
         return enrollmentId;
     }
 
-    //public void setEnrollmentId(int enrollmentId) {
-        //this.enrollmentId = enrollmentId;
-    //}
+    public void setEnrollmentId(int enrollmentId) {
+        this.enrollmentId = enrollmentId;
+    }
 
     public String getStudentName() {
         return studentName;
