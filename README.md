@@ -9,3 +9,7 @@ This system will make events more visible to students and
 simplify the ability to discover,register and monitor events. 
 
 Haya Khan 746008798
+
+I added the Enrollment bean to the project, which represents the relationship between students and the events they register for. This class stores information such as the enrollment ID, student ID, event name, and enrollment date. It helps track which students are registered for specific campus events within the system.
+
+Syed Faseeullah Khaleel 422000932
