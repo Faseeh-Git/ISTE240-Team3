@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin List</title>
+</head>
+
+<body>
+
+<h1>Admins</h1>
+
+<a href="/admin/add">Add Admin</a>
+
+<table border="1">
+
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+    </tr>
+
+    {{#admins}}
+        <tr>
+            <td>{{adminID}}</td>
+            <td>{{adminName}}</td>
+            <td>{{adminEmail}}</td>
+            <td>{{role}}</td>
+        </tr>
+    {{/admins}}
+
+</table>
+
+</body>
+</html>
