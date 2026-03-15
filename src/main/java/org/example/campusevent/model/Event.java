@@ -1,9 +1,7 @@
 package org.example.campusevent.model;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public class Event {
+
     private int eventID;
     private String eventName;
     private String eventDescription;
@@ -11,8 +9,20 @@ public class Event {
     private String date;
     private String hostName;
 
-    public Event() {
 
+    public Event() {
+    }
+
+
+    public Event(int eventID, String eventName, String eventDescription,
+                 String eventLocation, String date, String hostName) {
+
+        this.eventID = eventID;
+        this.eventName = eventName;
+        this.eventDescription = eventDescription;
+        this.eventLocation = eventLocation;
+        this.date = date;
+        this.hostName = hostName;
     }
 
     public int getEventID() {
@@ -72,5 +82,4 @@ public class Event {
                 ", date=" + date +
                 ", hostName=" + hostName + "]";
     }
-
 }

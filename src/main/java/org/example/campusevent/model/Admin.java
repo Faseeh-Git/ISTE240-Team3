@@ -1,8 +1,5 @@
 package org.example.campusevent.model;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public class Admin {
 
     private int adminID;
@@ -11,7 +8,13 @@ public class Admin {
     private String role;
 
     public Admin() {
+    }
 
+    public Admin(int adminID, String adminName, String adminEmail, String role) {
+        this.adminID = adminID;
+        this.adminName = adminName;
+        this.adminEmail = adminEmail;
+        this.role = role;
     }
 
     public int getAdminID() {
@@ -45,13 +48,4 @@ public class Admin {
     public void setRole(String role) {
         this.role = role;
     }
-
-    @Override
-    public String toString() {
-        return "Amin [ID=" + adminID +
-                ", name=" + adminName +
-                ", email=" + adminEmail +
-                ", role=" + role + "]";
-    }
-
 }
