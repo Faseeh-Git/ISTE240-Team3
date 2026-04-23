@@ -1,5 +1,4 @@
-// Name: Brendon
-// ID: 761008604
+// Name: Brendon ID: 761008604
 
 package org.example.campusevent.service;
 
