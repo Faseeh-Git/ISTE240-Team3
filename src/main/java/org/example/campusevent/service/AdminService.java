@@ -1,26 +1,51 @@
+// Name: Brendon
+// ID: 761008604
+
 package org.example.campusevent.service;
 
+import jakarta.transaction.Transactional;
 import org.example.campusevent.model.Admin;
+import org.example.campusevent.repository.AdminRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@Transactional
 public class AdminService {
 
-    private List<Admin> admins = new ArrayList<>();
+    private final AdminRepository repository;
 
-    public AdminService(){
-        admins.add(new Admin(1, "John", "johnadmin@gmail.com", "designer"));
-        admins.add(new Admin(2, "James", "jamesadmin@gmail.com", "maintenance"));
+    public AdminService(AdminRepository repository) {
+        this.repository = repository;
     }
 
-    public List<Admin> getAdmin(){
-        return admins;
+    public Admin createAdmin(Admin admin) {
+
+        if(admin.getAdminEmail() == null || admin.getAdminEmail().isEmpty())
+            throw new RuntimeException("Email cannot be empty");
+
+        return repository.save(admin);
     }
 
-    public void addAdmin(Admin admin){
-        admins.add(admin);
+    public List<Admin> getAllAdmins() {
+        return repository.findAll();
+    }
+
+    public Optional<Admin> getAdminById(Long id) {
+        return repository.findById(id);
+    }
+
+    public List<Admin> searchAdminsByName(String name) {
+        return repository.findByAdminName(name);
+    }
+
+    public int updateAdminRole(Long id, String role) {
+        return repository.updateRoleById(id, role);
+    }
+
+    public void deleteAdmin(Long id) {
+        repository.deleteById(id);
     }
 }

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admins</title>
+</head>
+<body>
+
+<h2>Admin List</h2>
+
+<input type="text" id="searchBox" placeholder="Search admin by name">
+<button onclick="searchAdmin()">Search</button>
+
+<br><br>
+
+<button onclick="loadAdmins()">Show All Admins</button>
+
+<br><br>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+    </tr>
+    </thead>
+
+    <tbody id="adminTable"></tbody>
+</table>
+
+<script>
+
+    function loadAdmins() {
+
+        fetch('/api/admins')
+            .then(response => response.json())
+            .then(data => {
+
+                let table = document.getElementById('adminTable');
+                table.innerHTML = '';
+
+                data.forEach(admin => {
+
+                    table.innerHTML += `
+                    <tr>
+                        <td>${admin.adminID}</td>
+                        <td>${admin.adminName}</td>
+                        <td>${admin.adminEmail}</td>
+                        <td>${admin.role}</td>
+                    </tr>
+                `;
+                });
+            });
+    }
+
+    function searchAdmin() {
+
+        let name = document.getElementById("searchBox").value;
+
+        fetch(`/api/admins/search?name=${name}`)
+            .then(response => response.json())
+            .then(data => {
+
+                let table = document.getElementById('adminTable');
+                table.innerHTML = '';
+
+                data.forEach(admin => {
+
+                    table.innerHTML += `
+                    <tr>
+                        <td>${admin.adminID}</td>
+                        <td>${admin.adminName}</td>
+                        <td>${admin.adminEmail}</td>
+                        <td>${admin.role}</td>
+                    </tr>
+                `;
+                });
+            });
+    }
+
+    loadAdmins();
+
+</script>
+
+</body>
+</html>
