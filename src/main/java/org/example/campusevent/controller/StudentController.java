@@ -4,6 +4,8 @@ package org.example.campusevent.controller;
 import org.example.campusevent.model.Student;
 import org.example.campusevent.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,36 +19,61 @@ import java.util.List;
 public class StudentController {
     @Autowired
     private StudentService studentService;
-//    public StudentController(StudentService studentService){this.studentService = studentService;}
 
     @GetMapping
-    public List<Student> getAll() {
-        return studentService.findAll();
+    public ResponseEntity<List<Student>> getAll() {
+        List<Student> students = studentService.findAll();
+        return new ResponseEntity<>(students, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Student> getById(@PathVariable Long id) {
-        return studentService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-    @GetMapping("/search")
-    public List<Student> searchByMajor(@RequestParam String major) {
-        return studentService.findByMajor(major);
-    }
-    @PostMapping
-    public Student create(@RequestBody Student student){
-        return studentService.saveStudent(student);
-    }
-    @PutMapping("/{id}")
-    public Student update(@PathVariable Long id, @RequestBody Student student) {
-        return studentService.updateStudent(id, student);
+        try {
+            return studentService.findById(id)
+                    .map(student -> new ResponseEntity<>(student, HttpStatus.OK))
+                    .orElse(new ResponseEntity<>((HttpHeaders) null, HttpStatus.NOT_FOUND));
+        } catch (Exception e) {
+            return new ResponseEntity<>((HttpHeaders) null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    // 6. DELETE (Requirement 3)
+    @GetMapping("/search")
+    public ResponseEntity<List<Student>> searchByMajor(@RequestParam String major) {
+        try {
+            List<Student> students = studentService.findByMajor(major);
+            return new ResponseEntity<>(students, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>((HttpHeaders) null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<Student> create(@RequestBody Student student) {
+        try {
+            Student savedStudent = studentService.saveStudent(student);
+            return new ResponseEntity<>(savedStudent, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>((HttpHeaders) null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<Student> update(@PathVariable Long id, @RequestBody Student student) {
+        try {
+            Student updatedStudent = studentService.updateStudent(id, student);
+            return new ResponseEntity<>(updatedStudent, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>((HttpHeaders) null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        studentService.deleteById(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        try {
+            studentService.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
 
