@@ -7,7 +7,6 @@ import org.example.campusevent.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,9 +33,14 @@ public class StudentService {
     }
 
     public Student saveStudent(Student student) {
+        if (student.getEmail() == null || student.getEmail().isEmpty())
+            throw new IllegalArgumentException("Email must be not empty or null");
+
+        if (studentRepository.existsByEmail(student.getEmail()))
+            throw new RuntimeException("Email already exists: " + student.getEmail());
+
         return studentRepository.save(student);
     }
-
 
     public Student updateStudent(Long id, Student updatedStudent) {
         Student existing = studentRepository.findById(id)
@@ -50,7 +54,7 @@ public class StudentService {
 
     public void deleteById(Long id) {
         Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Delete failed"));
+                .orElseThrow(() -> new RuntimeException("Student not found"));
         studentRepository.delete(student);
     }
     }
