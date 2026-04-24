@@ -5,9 +5,11 @@ package org.example.campusevent.repository;
 import org.example.campusevent.model.Admin;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface AdminRepository extends JpaRepository<Admin, Long> {
 
     @Query("SELECT a FROM Admin a WHERE a.adminName = :name")
