@@ -8,7 +8,6 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             background-color: #111;
             color: #f0f0f0;
@@ -16,12 +15,10 @@
             min-height: 100vh;
             padding: 40px 20px;
         }
-
         .container {
             max-width: 720px;
             margin: 0 auto;
         }
-
         h1 {
             font-size: 2rem;
             color: #ff6a00;
@@ -29,13 +26,11 @@
             padding-bottom: 12px;
             margin-bottom: 20px;
         }
-
         p {
             color: #ccc;
             line-height: 1.7;
             margin-bottom: 28px;
         }
-
         h3 {
             color: #ff6a00;
             font-size: 1.1rem;
@@ -44,25 +39,21 @@
             margin-bottom: 12px;
             margin-top: 28px;
         }
-
         ul {
             list-style: none;
             margin-bottom: 20px;
         }
-
         ul li {
             padding: 6px 0;
             margin-bottom: 6px;
             color: #ddd;
         }
-
         .btn-group {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
             margin-bottom: 16px;
         }
-
         button {
             background-color: #ff6a00;
             color: #111;
@@ -73,38 +64,31 @@
             cursor: pointer;
             font-family: Georgia, serif;
         }
-
         button:hover {
             background-color: #e05a00;
         }
-
         a {
             color: #ff6a00;
             text-decoration: none;
         }
-
         a:hover {
             text-decoration: underline;
         }
-
         .link-row {
             display: flex;
             flex-direction: column;
             gap: 10px;
             margin-top: 8px;
         }
-
         .link-row a button {
             background-color: #ff6a00;
             color: #111;
         }
-
         .link-row a button:hover {
             background-color: #e05a00;
         }
     </style>
 </head>
-
 <body>
 <div class="container">
 
@@ -126,20 +110,10 @@
         <li>Statistical Dashboard (Total Events, Registrations, Popular Categories)</li>
     </ul>
 
-    <h3>Navigation</h3>
-    <div class="btn-group">
-        <button onclick="location.href='/admin'">View Admins</button>
-        <button onclick="location.href='/admin/add'">Add Admin</button>
-        <button onclick="location.href='/event'">View Events</button>
-        <button onclick="location.href='/event/add'">Add Event</button>
-    </div>
-
-    <h3>Enrollment</h3>
+    <h3>Enrollments</h3>
     <div class="link-row">
-        <a href="/enrollment"><button type="button">View Enrollments</button></a>
-        <h3>Students</h3>
-        <a href="/student">
-            <button type="button">View Student</button>
+        <a href="/enrollments.html">
+            <button type="button">Manage Enrollments</button>
         </a>
     </div>
 
