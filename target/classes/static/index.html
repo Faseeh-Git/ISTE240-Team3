@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <title>Campus Event Organizer Platform</title>
+
     <style>
         * {
             margin: 0;
@@ -56,13 +57,6 @@
             color: #ddd;
         }
 
-        .btn-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 16px;
-        }
-
         button {
             background-color: #ff6a00;
             color: #111;
@@ -76,15 +70,6 @@
 
         button:hover {
             background-color: #e05a00;
-        }
-
-        a {
-            color: #ff6a00;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
         }
 
         .link-row {
@@ -106,6 +91,7 @@
 </head>
 
 <body>
+
 <div class="container">
 
     <h1>Campus Event Organizer Platform</h1>
@@ -116,7 +102,7 @@
 
     <h3>Features</h3>
     <ul>
-        <li>Student and Organizer Registration &amp; Login</li>
+        <li>Student and Organizer Registration & Login</li>
         <li>User Profile Management</li>
         <li>Create, Edit and Delete Events</li>
         <li>Event Listing and Detailed Event Pages</li>
@@ -126,23 +112,25 @@
         <li>Statistical Dashboard (Total Events, Registrations, Popular Categories)</li>
     </ul>
 
-    <h3>Navigation</h3>
-    <div class="btn-group">
-        <button onclick="location.href='/admin'">View Admins</button>
-        <button onclick="location.href='/admin/add'">Add Admin</button>
-        <button onclick="location.href='/event'">View Events</button>
-        <button onclick="location.href='/event/add'">Add Event</button>
+
+    <!-- ADMIN SECTION -->
+    <h3>Admins</h3>
+    <div class="link-row">
+        <a href="/admins.html">
+            <button type="button">Manage Admins</button>
+        </a>
     </div>
 
-    <h3>Enrollment</h3>
+
+    <!-- EVENTS SECTION -->
+    <h3>Events</h3>
     <div class="link-row">
-        <a href="/enrollment"><button type="button">View Enrollments</button></a>
-        <h3>Students</h3>
-        <a href="/student">
-            <button type="button">View Student</button>
+        <a href="/events.html">
+            <button type="button">Manage Events</button>
         </a>
     </div>
 
 </div>
+
 </body>
 </html>
