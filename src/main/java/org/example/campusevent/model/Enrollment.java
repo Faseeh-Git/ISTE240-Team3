@@ -21,9 +21,9 @@ public class Enrollment {
     @Column(name = "date", nullable = false)
     private String date;
 
-    //@ManyToOne
-    //@JoinColumn(name = "student_id")
-    //private Student student;
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    private Student student;
 
     public Enrollment() {}
 
