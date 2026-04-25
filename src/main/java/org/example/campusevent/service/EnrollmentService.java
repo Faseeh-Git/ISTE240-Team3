@@ -15,10 +15,11 @@ import java.util.Optional;
 @Transactional
 public class EnrollmentService {
 
+    // Spring injects the repository automatically
     @Autowired
     private EnrollmentRepository enrollmentRepository;
 
-    // GET all enrollments from database
+    // GET all enrollments
     public List<Enrollment> findAll() {
         return enrollmentRepository.findAll();
     }
@@ -28,17 +29,21 @@ public class EnrollmentService {
         return enrollmentRepository.findById(id);
     }
 
-    // SEARCH enrollments by student name
+    // SEARCH by student name
     public List<Enrollment> findByStudentName(String studentName) {
         return enrollmentRepository.findByStudentName(studentName);
     }
 
-    // SAVE new enrollment to database
+    // SAVE — validate student name before saving
     public Enrollment save(Enrollment enrollment) {
+        if (enrollment.getStudentName() == null || enrollment.getStudentName().isEmpty())
+            throw new IllegalArgumentException("Student name must be not empty or null");
+        if (enrollmentRepository.existsByStudentName(enrollment.getStudentName()))
+            throw new RuntimeException("Enrollment already exists: " + enrollment.getStudentName());
         return enrollmentRepository.save(enrollment);
     }
 
-    // UPDATE existing enrollment —
+    // UPDATE — find existing enrollment then update fields
     public Enrollment update(int id, Enrollment updatedEnrollment) {
         Enrollment existing = enrollmentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Enrollment not found"));
@@ -48,10 +53,10 @@ public class EnrollmentService {
         return enrollmentRepository.save(existing);
     }
 
-    // DELETE enrollment
+    // DELETE — find first then delete
     public void deleteById(int id) {
         Enrollment enrollment = enrollmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Delete failed"));
+                .orElseThrow(() -> new RuntimeException("Enrollment not found"));
         enrollmentRepository.delete(enrollment);
     }
 }
