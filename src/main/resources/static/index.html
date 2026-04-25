@@ -2,12 +2,14 @@
 <html lang="en">
 <head>
     <title>Campus Event Organizer Platform</title>
+
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
             background-color: #111;
             color: #f0f0f0;
@@ -15,10 +17,12 @@
             min-height: 100vh;
             padding: 40px 20px;
         }
+
         .container {
             max-width: 720px;
             margin: 0 auto;
         }
+
         h1 {
             font-size: 2rem;
             color: #ff6a00;
@@ -26,11 +30,13 @@
             padding-bottom: 12px;
             margin-bottom: 20px;
         }
+
         p {
             color: #ccc;
             line-height: 1.7;
             margin-bottom: 28px;
         }
+
         h3 {
             color: #ff6a00;
             font-size: 1.1rem;
@@ -39,21 +45,18 @@
             margin-bottom: 12px;
             margin-top: 28px;
         }
+
         ul {
             list-style: none;
             margin-bottom: 20px;
         }
+
         ul li {
             padding: 6px 0;
             margin-bottom: 6px;
             color: #ddd;
         }
-        .btn-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 16px;
-        }
+
         button {
             background-color: #ff6a00;
             color: #111;
@@ -64,32 +67,31 @@
             cursor: pointer;
             font-family: Georgia, serif;
         }
+
         button:hover {
             background-color: #e05a00;
         }
-        a {
-            color: #ff6a00;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
+
         .link-row {
             display: flex;
             flex-direction: column;
             gap: 10px;
             margin-top: 8px;
         }
+
         .link-row a button {
             background-color: #ff6a00;
             color: #111;
         }
+
         .link-row a button:hover {
             background-color: #e05a00;
         }
     </style>
 </head>
+
 <body>
+
 <div class="container">
 
     <h1>Campus Event Organizer Platform</h1>
@@ -100,7 +102,7 @@
 
     <h3>Features</h3>
     <ul>
-        <li>Student and Organizer Registration &amp; Login</li>
+        <li>Student and Organizer Registration & Login</li>
         <li>User Profile Management</li>
         <li>Create, Edit and Delete Events</li>
         <li>Event Listing and Detailed Event Pages</li>
@@ -110,13 +112,25 @@
         <li>Statistical Dashboard (Total Events, Registrations, Popular Categories)</li>
     </ul>
 
-    <h3>Enrollments</h3>
+
+    <!-- ADMIN SECTION -->
+    <h3>Admins</h3>
     <div class="link-row">
-        <a href="/enrollments.html">
-            <button type="button">Manage Enrollments</button>
+        <a href="/admins.html">
+            <button type="button">Manage Admins</button>
+        </a>
+    </div>
+
+
+    <!-- EVENTS SECTION -->
+    <h3>Events</h3>
+    <div class="link-row">
+        <a href="/events.html">
+            <button type="button">Manage Events</button>
         </a>
     </div>
 
 </div>
+
 </body>
 </html>
