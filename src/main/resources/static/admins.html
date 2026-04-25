@@ -1,33 +1,112 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Admins</title>
+
+    <style>
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: sans-serif;
+            margin: 0;
+        }
+
+        .container {
+            width: 90%;
+            margin: auto;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px;
+            border-bottom: 3px solid #ff6a00;
+        }
+
+        .card {
+            background: #1e1e1e;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            background: #2b2b2b;
+            border: 1px solid #444;
+            color: white;
+        }
+
+        .btn {
+            background: #ff6a00;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #e05a00;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #444;
+        }
+
+        th {
+            color: #ff6a00;
+        }
+
+        tr:hover {
+            background: #2a2a2a;
+        }
+    </style>
 </head>
+
 <body>
 
-<h2>Admin List</h2>
+<div class="header">
+    <h1 style="color:#ff6a00;">Admin List</h1>
+</div>
 
-<input type="text" id="searchBox" placeholder="Search admin by name">
-<button onclick="searchAdmin()">Search</button>
+<div class="container">
 
-<br><br>
+    <div class="card">
 
-<button onclick="loadAdmins()">Show All Admins</button>
+        <input type="text" id="searchBox" placeholder="Search admin by name">
+        <button class="btn" onclick="searchAdmin()">Search</button>
 
-<br><br>
+        <br><br>
 
-<table border="1">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Role</th>
-    </tr>
-    </thead>
+        <button class="btn" onclick="loadAdmins()">Show All Admins</button>
 
-    <tbody id="adminTable"></tbody>
-</table>
+        <br><br>
+
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+            </tr>
+            </thead>
+
+            <tbody id="adminTable"></tbody>
+        </table>
+
+    </div>
+
+    <button class="btn" onclick="window.location.href='index.html'">Back</button>
+
+</div>
 
 <script>
 
@@ -43,13 +122,13 @@
                 data.forEach(admin => {
 
                     table.innerHTML += `
-                    <tr>
-                        <td>${admin.adminID}</td>
-                        <td>${admin.adminName}</td>
-                        <td>${admin.adminEmail}</td>
-                        <td>${admin.role}</td>
-                    </tr>
-                `;
+<tr>
+<td>${admin.adminID}</td>
+<td>${admin.adminName}</td>
+<td>${admin.adminEmail}</td>
+<td>${admin.role}</td>
+</tr>
+`;
                 });
             });
     }
@@ -68,13 +147,13 @@
                 data.forEach(admin => {
 
                     table.innerHTML += `
-                    <tr>
-                        <td>${admin.adminID}</td>
-                        <td>${admin.adminName}</td>
-                        <td>${admin.adminEmail}</td>
-                        <td>${admin.role}</td>
-                    </tr>
-                `;
+<tr>
+<td>${admin.adminID}</td>
+<td>${admin.adminName}</td>
+<td>${admin.adminEmail}</td>
+<td>${admin.role}</td>
+</tr>
+`;
                 });
             });
     }
