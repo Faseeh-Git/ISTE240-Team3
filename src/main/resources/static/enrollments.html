@@ -1,0 +1,272 @@
+<!-- Syed Faseeullah | 422000932 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enrollment Registry</title>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <style>
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: sans-serif;
+            margin: 0;
+        }
+
+        /* Layout */
+        .container {
+            width: 90%;
+            margin: auto;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .col {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 40px;
+            border-bottom: 3px solid #ff6a00;
+        }
+
+        /* Card */
+        .card {
+            background: #1e1e1e;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #333;
+        }
+
+        /* Inputs */
+        input {
+            width: 100%;
+            padding: 10px;
+            background: #2b2b2b;
+            border: 1px solid #444;
+            color: white;
+        }
+
+        /* Buttons */
+        .btn {
+            background: #ff6a00;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #e05a00;
+        }
+
+        .btn-secondary {
+            background: gray;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #444;
+        }
+
+        th {
+            color: #ff6a00;
+        }
+
+        tr:hover {
+            background: #2a2a2a;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1 style="color:#ff6a00;">Campus Enrollment Registry</h1>
+</div>
+
+<div class="container">
+
+    <!-- FORM -->
+    <div class="card">
+        <h3 id="formTitle">Register New Enrollment</h3>
+        <input type="hidden" id="enrollmentId">
+
+        <div class="row">
+            <div class="col">
+                <input type="text" id="studentName" placeholder="Student Name">
+            </div>
+            <div class="col">
+                <input type="text" id="eventName" placeholder="Event Name">
+            </div>
+            <div class="col">
+                <input type="text" id="date" placeholder="Date (YYYY-MM-DD)">
+            </div>
+            <div class="col">
+                <button class="btn" id="saveBtn">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="card">
+        <div class="row">
+            <div class="col" style="flex: 2;">
+                <input type="text" id="searchStudent" placeholder="Search by Student Name">
+            </div>
+            <div class="col" style="flex: 1; display:flex; gap:10px;">
+                <button class="btn" id="searchBtn">Search</button>
+                <button class="btn btn-secondary" id="resetBtn">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="card">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Student Name</th>
+                <th>Event Name</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody id="enrollmentTable"></tbody>
+        </table>
+    </div>
+
+    <button class="btn" onclick="window.location.href='index.html'">Back</button>
+
+</div>
+
+<script>
+    var API = "/api/enrollments";
+
+    // load all enrollments and build table rows
+    function refresh() {
+        $.get(API, function(data) {
+            var htmlRows = "";
+            for (var i = 0; i < data.length; i++) {
+                var e = data[i];
+                htmlRows += "<tr>";
+                htmlRows += "<td>" + e.enrollmentId + "</td>";
+                htmlRows += "<td><b>" + e.studentName + "</b></td>";
+                htmlRows += "<td>" + e.eventName + "</td>";
+                htmlRows += "<td>" + e.date + "</td>";
+                htmlRows += "<td>";
+                htmlRows += `<button class="btn" onclick="editEnrollment(${e.enrollmentId}, '${e.studentName}', '${e.eventName}', '${e.date}')">Edit</button>`;
+                htmlRows += `<button class="btn btn-secondary" onclick="deleteEnrollment(${e.enrollmentId})">Delete</button>`;
+                htmlRows += "</td>";
+                htmlRows += "</tr>";
+            }
+            $("#enrollmentTable").html(htmlRows);
+        });
+    }
+
+    // save — POST for new, PUT for update
+    $("#saveBtn").click(function() {
+        var id = $("#enrollmentId").val();
+        var enrollment = {
+            studentName: $("#studentName").val(),
+            eventName: $("#eventName").val(),
+            date: $("#date").val()
+        };
+
+        $.ajax({
+            url: id ? API + "/" + id : API,
+            type: id ? "PUT" : "POST",
+            contentType: "application/json",
+            data: JSON.stringify(enrollment),
+            success: function() {
+                resetForm();
+                refresh();
+            }
+        });
+    });
+
+    // delete enrollment by ID
+    function deleteEnrollment(id) {
+        $.ajax({
+            url: API + "/" + id,
+            type: "DELETE",
+            success: function() {
+                refresh();
+            }
+        });
+    }
+
+    // fill form with existing data for editing
+    function editEnrollment(id, studentName, eventName, date) {
+        $("#enrollmentId").val(id);
+        $("#studentName").val(studentName);
+        $("#eventName").val(eventName);
+        $("#date").val(date);
+        $("#formTitle").html("Update Enrollment #" + id);
+    }
+
+    // reset form back to add mode
+    function resetForm() {
+        $("#enrollmentId").val("");
+        $("#studentName").val("");
+        $("#eventName").val("");
+        $("#date").val("");
+        $("#formTitle").html("Register New Enrollment");
+    }
+
+    // search by student name
+    $("#searchBtn").click(function() {
+        var name = $("#searchStudent").val();
+
+        if (!name) {
+            refresh();
+            return;
+        }
+
+        $.get(API + "/search?studentName=" + name, function(data) {
+            var htmlRows = "";
+            for (var i = 0; i < data.length; i++) {
+                var e = data[i];
+                htmlRows += "<tr>";
+                htmlRows += "<td>" + e.enrollmentId + "</td>";
+                htmlRows += "<td>" + e.studentName + "</td>";
+                htmlRows += "<td>" + e.eventName + "</td>";
+                htmlRows += "<td>" + e.date + "</td>";
+                htmlRows += "<td>";
+                htmlRows += `<button class="btn" onclick="editEnrollment(${e.enrollmentId}, '${e.studentName}', '${e.eventName}', '${e.date}')">Edit</button>`;
+                htmlRows += `<button class="btn btn-secondary" onclick="deleteEnrollment(${e.enrollmentId})">Delete</button>`;
+                htmlRows += "</td>";
+                htmlRows += "</tr>";
+            }
+            $("#enrollmentTable").html(htmlRows);
+        });
+    });
+
+    // reset search
+    $("#resetBtn").click(function() {
+        $("#searchStudent").val("");
+        refresh();
+    });
+
+    // load enrollments when page opens
+    $(document).ready(refresh);
+</script>
+</body>
+</html>
