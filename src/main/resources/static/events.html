@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Events</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Registry</title>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <style>
         body {
@@ -17,6 +20,17 @@
             margin: auto;
         }
 
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .col {
+            flex: 1;
+            min-width: 200px;
+        }
+
         .header {
             text-align: center;
             padding: 40px;
@@ -28,6 +42,14 @@
             padding: 20px;
             margin: 20px 0;
             border: 1px solid #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            background: #2b2b2b;
+            border: 1px solid #444;
+            color: white;
         }
 
         .btn {
@@ -65,18 +87,33 @@
 <body>
 
 <div class="header">
-    <h1 style="color:#ff6a00;">Event List</h1>
+    <h1 style="color:#ff6a00;">Campus Event Registry</h1>
 </div>
 
 <div class="container">
 
     <div class="card">
+        <h3>Search Events</h3>
 
-        <button class="btn" onclick="loadEvents()">Show Events</button>
+        <div class="row">
 
-        <br><br>
+            <div class="col">
+                <input type="text" id="searchName" placeholder="Search by event name">
+            </div>
+
+            <div class="col">
+                <button class="btn" id="searchBtn">Search</button>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
 
         <table>
+
             <thead>
             <tr>
                 <th>ID</th>
@@ -89,43 +126,90 @@
             </thead>
 
             <tbody id="eventTable"></tbody>
+
         </table>
 
     </div>
+
 
     <button class="btn" onclick="window.location.href='index.html'">Back</button>
 
 </div>
 
+
 <script>
 
-    function loadEvents(){
+    var API="/api/events";
 
-        fetch('/api/events')
-            .then(response => response.json())
-            .then(data => {
 
-                let table=document.getElementById('eventTable');
-                table.innerHTML='';
+    function refresh(){
 
-                data.forEach(event=>{
+        $.get(API,function(data){
 
-                    table.innerHTML+=`
+            var rows="";
+
+            for(var i=0;i<data.length;i++){
+
+                var e=data[i];
+
+                rows+=`
 <tr>
-<td>${event.eventID}</td>
-<td>${event.eventName}</td>
-<td>${event.eventDescription}</td>
-<td>${event.eventLocation}</td>
-<td>${event.date}</td>
-<td>${event.hostName}</td>
+<td>${e.eventID}</td>
+<td>${e.eventName}</td>
+<td>${e.eventDescription}</td>
+<td>${e.eventLocation}</td>
+<td>${e.date}</td>
+<td>${e.hostName}</td>
 </tr>
 `;
 
-                });
-            });
+            }
+
+            $("#eventTable").html(rows);
+
+        });
+
     }
 
-    loadEvents();
+
+    $("#searchBtn").click(function(){
+
+        var name=$("#searchName").val();
+
+        if(!name){
+            refresh();
+            return;
+        }
+
+        $.get(API+"/search?name="+name,function(data){
+
+            var rows="";
+
+            for(var i=0;i<data.length;i++){
+
+                var e=data[i];
+
+                rows+=`
+<tr>
+<td>${e.eventID}</td>
+<td>${e.eventName}</td>
+<td>${e.eventDescription}</td>
+<td>${e.eventLocation}</td>
+<td>${e.date}</td>
+<td>${e.hostName}</td>
+</tr>
+`;
+
+            }
+
+            $("#eventTable").html(rows);
+
+        });
+
+    });
+
+
+    $(document).ready(refresh);
 
 </script>
 
