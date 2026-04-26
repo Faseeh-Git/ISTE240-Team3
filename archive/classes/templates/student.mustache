@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student</title>
+</head>
+<body>
+<h2>Student List</h2>
+<br>
+<a href="/student/add">Add New Student</a>
+<br>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Student ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Major</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#studentList}}
+        <tr>
+            <td>{{studentID}}</td>
+            <td>{{name}}</td>
+            <td>{{email}}</td>
+            <td>{{major}}</td>
+        </tr>
+    {{/studentList}}
+
+    </tbody>
+</table>
+<a href="/">Back to Home</a>
+
+</body>
+</html>
