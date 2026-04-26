@@ -12,40 +12,40 @@ import java.util.List;
 @RequestMapping("/api/admins")
 public class AdminController {
 
-    private final AdminService service;
+    private final AdminService adminService;
 
-    public AdminController(AdminService service) {
-        this.service = service;
+    public AdminController(AdminService adminService) {
+        this.adminService = adminService;
     }
 
+    // List all admins
     @GetMapping
     public List<Admin> getAllAdmins() {
-        return service.getAllAdmins();
+        return adminService.getAllAdmins();
     }
 
-    @GetMapping("/{id}")
-    public Admin getAdminById(@PathVariable Long id) {
-        return service.getAdminById(id).orElse(null);
-    }
-
+    // Search admin by name
     @GetMapping("/search")
     public List<Admin> searchAdmins(@RequestParam String name) {
-        return service.searchAdminsByName(name);
+        return adminService.findByAdminName(name);
     }
 
+    // save new admin
     @PostMapping
     public Admin createAdmin(@RequestBody Admin admin) {
-        return service.createAdmin(admin);
+        return adminService.save(admin);
     }
 
+    // Update admin
     @PutMapping("/{id}")
-    public int updateRole(@PathVariable Long id,
-                          @RequestParam String role) {
-        return service.updateAdminRole(id, role);
+    public Admin updateAdmin(@PathVariable Long id,
+                             @RequestBody Admin admin) {
+        return adminService.update(id, admin);
     }
 
+    // delete admin
     @DeleteMapping("/{id}")
     public void deleteAdmin(@PathVariable Long id) {
-        service.deleteAdmin(id);
+        adminService.delete(id);
     }
 }

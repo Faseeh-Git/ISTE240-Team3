@@ -1,215 +1,244 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Registry</title>
-
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <title>Campus Event Registry</title>
 
     <style>
-        body {
-            background-color: #121212;
-            color: #e0e0e0;
-            font-family: sans-serif;
-            margin: 0;
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
         }
 
-        .container {
-            width: 90%;
-            margin: auto;
+        body{
+            background:#111;
+            color:#f0f0f0;
+            font-family:Georgia, serif;
         }
 
-        .row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
+        h1{
+            text-align:center;
+            color:#ff6a00;
+            margin-top:40px;
         }
 
-        .col {
-            flex: 1;
-            min-width: 200px;
+        .divider{
+            height:2px;
+            background:#ff6a00;
+            margin:20px 0;
         }
 
-        .header {
-            text-align: center;
-            padding: 40px;
-            border-bottom: 3px solid #ff6a00;
+        .section{
+            width:85%;
+            margin:20px auto;
+            background:#1b1b1b;
+            padding:20px;
         }
 
-        .card {
-            background: #1e1e1e;
-            padding: 20px;
-            margin: 20px 0;
-            border: 1px solid #333;
+        input{
+            width:18%;
+            padding:10px;
+            background:#222;
+            border:1px solid #444;
+            color:white;
         }
 
-        input {
-            width: 100%;
-            padding: 10px;
-            background: #2b2b2b;
-            border: 1px solid #444;
-            color: white;
+        button{
+            background:#ff6a00;
+            color:#111;
+            border:none;
+            padding:10px 18px;
+            font-weight:bold;
+            cursor:pointer;
         }
 
-        .btn {
-            background: #ff6a00;
-            color: white;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
+        button:hover{
+            background:#e05a00;
         }
 
-        .btn:hover {
-            background: #e05a00;
+        table{
+            width:100%;
+            margin-top:20px;
+            border-collapse:collapse;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        th{
+            color:#ff6a00;
+            padding:12px;
         }
 
-        th, td {
-            padding: 10px;
-            border-bottom: 1px solid #444;
+        td{
+            padding:12px;
+            border-top:1px solid #333;
         }
 
-        th {
-            color: #ff6a00;
+        .back-btn{
+            margin:20px;
         }
 
-        tr:hover {
-            background: #2a2a2a;
-        }
     </style>
 </head>
 
 <body>
 
-<div class="header">
-    <h1 style="color:#ff6a00;">Campus Event Registry</h1>
-</div>
-
-<div class="container">
-
-    <div class="card">
-        <h3>Search Events</h3>
-
-        <div class="row">
-
-            <div class="col">
-                <input type="text" id="searchName" placeholder="Search by event name">
-            </div>
-
-            <div class="col">
-                <button class="btn" id="searchBtn">Search</button>
-            </div>
-
-        </div>
-
-    </div>
+<h1>Campus Event Registry</h1>
+<div class="divider"></div>
 
 
-    <div class="card">
+<div class="section">
 
-        <table>
+    <h3>Register / Update Event</h3>
 
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Location</th>
-                <th>Date</th>
-                <th>Host</th>
-            </tr>
-            </thead>
+    <input id="eventName" placeholder="Event Name">
+    <input id="eventDescription" placeholder="Description">
+    <input id="eventLocation" placeholder="Location">
+    <input id="date" placeholder="Date">
+    <input id="hostName" placeholder="Host">
 
-            <tbody id="eventTable"></tbody>
-
-        </table>
-
-    </div>
-
-
-    <button class="btn" onclick="window.location.href='index.html'">Back</button>
+    <button onclick="saveEvent()">Save</button>
 
 </div>
+
+
+<div class="section">
+
+    <input id="searchBox" placeholder="Search by event name">
+
+    <button onclick="searchEvent()">Search</button>
+    <button onclick="loadEvents()">Reset</button>
+
+</div>
+
+
+<div class="section">
+
+    <table>
+
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Location</th>
+            <th>Date</th>
+            <th>Host</th>
+            <th>Edit</th>
+        </tr>
+        </thead>
+
+        <tbody id="eventTable"></tbody>
+
+    </table>
+
+</div>
+
+
+<button class="back-btn"
+        onclick="window.location.href='index.html'">
+    Back
+</button>
 
 
 <script>
 
-    var API="/api/events";
+    let editingId=null;
 
+    function loadEvents(){
 
-    function refresh(){
+        fetch("/api/events")
+            .then(res=>res.json())
+            .then(renderEvents);
 
-        $.get(API,function(data){
+    }
 
-            var rows="";
+    function renderEvents(data){
 
-            for(var i=0;i<data.length;i++){
+        eventTable.innerHTML="";
 
-                var e=data[i];
+        data.forEach(event=>{
 
-                rows+=`
+            eventTable.innerHTML+=`
 <tr>
-<td>${e.eventID}</td>
-<td>${e.eventName}</td>
-<td>${e.eventDescription}</td>
-<td>${e.eventLocation}</td>
-<td>${e.date}</td>
-<td>${e.hostName}</td>
+<td>${event.eventID}</td>
+<td>${event.eventName}</td>
+<td>${event.eventDescription}</td>
+<td>${event.eventLocation}</td>
+<td>${event.date}</td>
+<td>${event.hostName}</td>
+<td>
+<button onclick="editEvent(
+${event.eventID},
+'${event.eventName}',
+'${event.eventDescription}',
+'${event.eventLocation}',
+'${event.date}',
+'${event.hostName}'
+)">Edit</button>
+</td>
 </tr>
 `;
-
-            }
-
-            $("#eventTable").html(rows);
 
         });
 
     }
 
+    function saveEvent(){
 
-    $("#searchBtn").click(function(){
+        let event={
 
-        var name=$("#searchName").val();
+            eventName:eventName.value,
+            eventDescription:eventDescription.value,
+            eventLocation:eventLocation.value,
+            date:date.value,
+            hostName:hostName.value
 
-        if(!name){
-            refresh();
-            return;
+        };
+
+        if(editingId==null){
+
+            fetch("/api/events",{
+                method:"POST",
+                headers:{"Content-Type":"application/json"},
+                body:JSON.stringify(event)
+            }).then(loadEvents);
+
+        }else{
+
+            fetch(`/api/events/${editingId}`,{
+                method:"PUT",
+                headers:{"Content-Type":"application/json"},
+                body:JSON.stringify(event)
+            }).then(()=>{
+                editingId=null;
+                loadEvents();
+            });
+
         }
 
-        $.get(API+"/search?name="+name,function(data){
+    }
 
-            var rows="";
+    function editEvent(id,name,desc,location,dateValue,host){
 
-            for(var i=0;i<data.length;i++){
+        eventName.value=name;
+        eventDescription.value=desc;
+        eventLocation.value=location;
+        date.value=dateValue;
+        hostName.value=host;
 
-                var e=data[i];
+        editingId=id;
 
-                rows+=`
-<tr>
-<td>${e.eventID}</td>
-<td>${e.eventName}</td>
-<td>${e.eventDescription}</td>
-<td>${e.eventLocation}</td>
-<td>${e.date}</td>
-<td>${e.hostName}</td>
-</tr>
-`;
+    }
 
-            }
+    function searchEvent(){
 
-            $("#eventTable").html(rows);
+        fetch(`/api/events/search?name=${searchBox.value}`)
+            .then(res=>res.json())
+            .then(renderEvents);
 
-        });
+    }
 
-    });
-
-
-    $(document).ready(refresh);
+    loadEvents();
 
 </script>
 

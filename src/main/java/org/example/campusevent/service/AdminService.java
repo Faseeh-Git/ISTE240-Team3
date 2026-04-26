@@ -2,49 +2,51 @@
 
 package org.example.campusevent.service;
 
-import jakarta.transaction.Transactional;
 import org.example.campusevent.model.Admin;
 import org.example.campusevent.repository.AdminRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
-@Transactional
 public class AdminService {
 
-    private final AdminRepository repository;
+    private final AdminRepository adminRepository;
 
-    public AdminService(AdminRepository repository) {
-        this.repository = repository;
+    public AdminService(AdminRepository adminRepository) {
+        this.adminRepository = adminRepository;
     }
 
-    public Admin createAdmin(Admin admin) {
-
-        if(admin.getAdminEmail() == null || admin.getAdminEmail().isEmpty())
-            throw new RuntimeException("Email cannot be empty");
-
-        return repository.save(admin);
-    }
-
+    // Get all admins
     public List<Admin> getAllAdmins() {
-        return repository.findAll();
+        return adminRepository.findAll();
     }
 
-    public Optional<Admin> getAdminById(Long id) {
-        return repository.findById(id);
+    // Search admins by name
+    public List<Admin> findByAdminName(String name) {
+        return adminRepository.findByAdminName(name);
     }
 
-    public List<Admin> searchAdminsByName(String name) {
-        return repository.findByAdminName(name);
+    // Save admin
+    public Admin save(Admin admin) {
+        return adminRepository.save(admin);
     }
 
-    public int updateAdminRole(Long id, String role) {
-        return repository.updateRoleById(id, role);
+    // Update admin
+    public Admin update(Long id, Admin updatedAdmin) {
+
+        Admin existing = adminRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Admin not found"));
+
+        existing.setAdminName(updatedAdmin.getAdminName());
+        existing.setAdminEmail(updatedAdmin.getAdminEmail());
+        existing.setRole(updatedAdmin.getRole());
+
+        return adminRepository.save(existing);
     }
 
-    public void deleteAdmin(Long id) {
-        repository.deleteById(id);
+    // Delete admin
+    public void delete(Long id) {
+        adminRepository.deleteById(id);
     }
 }

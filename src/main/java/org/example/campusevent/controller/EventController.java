@@ -12,40 +12,34 @@ import java.util.List;
 @RequestMapping("/api/events")
 public class EventController {
 
-    private final EventService service;
+    private final EventService eventService;
 
-    public EventController(EventService service) {
-        this.service = service;
+    public EventController(EventService eventService) {
+        this.eventService = eventService;
     }
 
+    // List all events
     @GetMapping
     public List<Event> getAllEvents() {
-        return service.getAllEvents();
+        return eventService.getAllEvents();
     }
 
-    @GetMapping("/{id}")
-    public Event getEvent(@PathVariable Long id) {
-        return service.getEventById(id).orElse(null);
-    }
-
+    // Search events
     @GetMapping("/search")
     public List<Event> searchEvents(@RequestParam String name) {
-        return service.searchEventsByName(name);
+        return eventService.findByEventName(name);
     }
 
+    // Save event
     @PostMapping
     public Event createEvent(@RequestBody Event event) {
-        return service.createEvent(event);
+        return eventService.save(event);
     }
 
+    // Update event
     @PutMapping("/{id}")
-    public int updateLocation(@PathVariable Long id,
-                              @RequestParam String location) {
-        return service.updateEventLocation(id, location);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteEvent(@PathVariable Long id) {
-        service.deleteEvent(id);
+    public Event updateEvent(@PathVariable Long id,
+                             @RequestBody Event event) {
+        return eventService.update(id, event);
     }
 }

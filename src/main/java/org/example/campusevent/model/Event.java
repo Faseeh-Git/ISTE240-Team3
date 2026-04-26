@@ -12,22 +12,17 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long eventID;
 
-    @Column(length = 50, nullable = false)
     private String eventName;
 
-    @Column(nullable = false)
     private String eventDescription;
 
-    @Column(nullable = false)
     private String eventLocation;
 
-    @Column(nullable = false)
     private String date;
 
-    @Column(nullable = false)
     private String hostName;
 
-    public Event(){}
+    public Event() {}
 
     public Event(String eventName,
                  String eventDescription,
@@ -46,27 +41,47 @@ public class Event {
         return eventID;
     }
 
+    public void setEventID(Long eventID) {
+        this.eventID = eventID;
+    }
+
     public String getEventName() {
         return eventName;
+    }
+
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
     }
 
     public String getEventDescription() {
         return eventDescription;
     }
 
+    public void setEventDescription(String eventDescription) {
+        this.eventDescription = eventDescription;
+    }
+
     public String getEventLocation() {
         return eventLocation;
+    }
+
+    public void setEventLocation(String eventLocation) {
+        this.eventLocation = eventLocation;
     }
 
     public String getDate() {
         return date;
     }
 
+    public void setDate(String date) {
+        this.date = date;
+    }
+
     public String getHostName() {
         return hostName;
     }
 
-    public void setEventLocation(String eventLocation) {
-        this.eventLocation = eventLocation;
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
     }
 }

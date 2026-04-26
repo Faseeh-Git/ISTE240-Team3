@@ -2,45 +2,49 @@
 
 package org.example.campusevent.service;
 
-import jakarta.transaction.Transactional;
 import org.example.campusevent.model.Event;
 import org.example.campusevent.repository.EventRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
-@Transactional
 public class EventService {
 
-    private final EventRepository repository;
+    private final EventRepository eventRepository;
 
-    public EventService(EventRepository repository) {
-        this.repository = repository;
+    public EventService(EventRepository eventRepository) {
+        this.eventRepository = eventRepository;
     }
 
-    public Event createEvent(Event event) {
-        return repository.save(event);
-    }
-
+    // Get all events
     public List<Event> getAllEvents() {
-        return repository.findAll();
+        return eventRepository.findAll();
     }
 
-    public Optional<Event> getEventById(Long id) {
-        return repository.findById(id);
+    // Search events by name
+    public List<Event> findByEventName(String name) {
+        return eventRepository.findByEventName(name);
     }
 
-    public List<Event> searchEventsByName(String name) {
-        return repository.findByEventName(name);
+    // Save event
+    public Event save(Event event) {
+        return eventRepository.save(event);
     }
 
-    public int updateEventLocation(Long id, String location) {
-        return repository.updateLocationById(id, location);
+    // Update event
+    public Event update(Long id, Event updatedEvent) {
+
+        Event existing = eventRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Event not found"));
+
+        existing.setEventName(updatedEvent.getEventName());
+        existing.setEventDescription(updatedEvent.getEventDescription());
+        existing.setEventLocation(updatedEvent.getEventLocation());
+        existing.setDate(updatedEvent.getDate());
+        existing.setHostName(updatedEvent.getHostName());
+
+        return eventRepository.save(existing);
     }
 
-    public void deleteEvent(Long id) {
-        repository.deleteById(id);
-    }
 }
