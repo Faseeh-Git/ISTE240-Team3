@@ -1,234 +1,244 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Registry</title>
-
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <title>Campus Admin Registry</title>
 
     <style>
-        body {
-            background-color: #121212;
-            color: #e0e0e0;
-            font-family: sans-serif;
-            margin: 0;
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
         }
 
-        .container {
-            width: 90%;
-            margin: auto;
+        body{
+            background:#111;
+            color:#f0f0f0;
+            font-family:Georgia, serif;
         }
 
-        .row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
+        h1{
+            text-align:center;
+            color:#ff6a00;
+            margin-top:40px;
         }
 
-        .col {
-            flex: 1;
-            min-width: 200px;
+        .divider{
+            height:2px;
+            background:#ff6a00;
+            margin:20px 0;
         }
 
-        .header {
-            text-align: center;
-            padding: 40px;
-            border-bottom: 3px solid #ff6a00;
+        .section{
+            width:85%;
+            margin:20px auto;
+            background:#1b1b1b;
+            padding:20px;
         }
 
-        .card {
-            background: #1e1e1e;
-            padding: 20px;
-            margin: 20px 0;
-            border: 1px solid #333;
+        input{
+            width:30%;
+            padding:10px;
+            background:#222;
+            border:1px solid #444;
+            color:white;
         }
 
-        input {
-            width: 100%;
-            padding: 10px;
-            background: #2b2b2b;
-            border: 1px solid #444;
-            color: white;
+        button{
+            background:#ff6a00;
+            color:#111;
+            border:none;
+            padding:10px 18px;
+            font-weight:bold;
+            cursor:pointer;
         }
 
-        .btn {
-            background: #ff6a00;
-            color: white;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
+        button:hover{
+            background:#e05a00;
         }
 
-        .btn:hover {
-            background: #e05a00;
+        table{
+            width:100%;
+            margin-top:20px;
+            border-collapse:collapse;
         }
 
-        .btn-secondary {
-            background: gray;
+        th{
+            color:#ff6a00;
+            padding:12px;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        td{
+            padding:12px;
+            border-top:1px solid #333;
         }
 
-        th, td {
-            padding: 10px;
-            border-bottom: 1px solid #444;
+        .back-btn{
+            margin:20px;
         }
 
-        th {
-            color: #ff6a00;
-        }
-
-        tr:hover {
-            background: #2a2a2a;
-        }
     </style>
 </head>
 
 <body>
 
-<div class="header">
-    <h1 style="color:#ff6a00;">Campus Admin Registry</h1>
-</div>
-
-<div class="container">
-
-    <div class="card">
-        <h3>Register New Admin</h3>
-
-        <div class="row">
-            <div class="col">
-                <input type="text" id="adminName" placeholder="Admin Name">
-            </div>
-
-            <div class="col">
-                <input type="email" id="adminEmail" placeholder="Admin Email">
-            </div>
-
-            <div class="col">
-                <input type="text" id="role" placeholder="Role">
-            </div>
-
-            <div class="col">
-                <button class="btn" id="saveBtn">Save</button>
-            </div>
-        </div>
-    </div>
+<h1>Campus Admin Registry</h1>
+<div class="divider"></div>
 
 
-    <div class="card">
-        <div class="row">
-            <div class="col" style="flex:2;">
-                <input type="text" id="searchName" placeholder="Search by name">
-            </div>
+<div class="section">
 
-            <div class="col" style="flex:1; display:flex; gap:10px;">
-                <button class="btn" id="searchBtn">Search</button>
-                <button class="btn-secondary" id="resetBtn">Reset</button>
-            </div>
-        </div>
-    </div>
+    <h3>Register / Update Admin</h3>
 
+    <input id="adminName" placeholder="Admin Name">
+    <input id="adminEmail" placeholder="Admin Email">
+    <input id="role" placeholder="Role">
 
-    <div class="card">
-        <table>
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-            </tr>
-            </thead>
-
-            <tbody id="adminTable"></tbody>
-        </table>
-    </div>
-
-    <button class="btn" onclick="window.location.href='index.html'">Back</button>
+    <button onclick="saveAdmin()">Save</button>
 
 </div>
+
+
+<div class="section">
+
+    <input id="searchBox" placeholder="Search by name">
+
+    <button onclick="searchAdmin()">Search</button>
+    <button onclick="loadAdmins()">Reset</button>
+
+</div>
+
+
+<div class="section">
+
+    <table>
+
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+
+        <tbody id="adminTable"></tbody>
+
+    </table>
+
+</div>
+
+
+<button class="back-btn"
+        onclick="window.location.href='index.html'">
+    Back
+</button>
 
 
 <script>
 
-    var API="/api/admins";
+    let editingId=null;
 
-    function refresh(){
+    function loadAdmins(){
 
-        $.get(API,function(data){
+        fetch("/api/admins")
+            .then(res=>res.json())
+            .then(renderAdmins);
 
-            var rows="";
+    }
 
-            for(var i=0;i<data.length;i++){
+    function renderAdmins(data){
 
-                var a=data[i];
+        adminTable.innerHTML="";
 
-                rows+=`
+        data.forEach(admin=>{
+
+            adminTable.innerHTML+=`
 <tr>
-<td>${a.adminID}</td>
-<td>${a.adminName}</td>
-<td>${a.adminEmail}</td>
-<td>${a.role}</td>
+<td>${admin.adminID}</td>
+<td>${admin.adminName}</td>
+<td>${admin.adminEmail}</td>
+<td>${admin.role}</td>
+<td>
+<button onclick="editAdmin(
+${admin.adminID},
+'${admin.adminName}',
+'${admin.adminEmail}',
+'${admin.role}'
+)">Edit</button>
+
+<button onclick="deleteAdmin(${admin.adminID})">
+Delete
+</button>
+</td>
 </tr>
 `;
-
-            }
-
-            $("#adminTable").html(rows);
 
         });
 
     }
 
+    function saveAdmin(){
 
-    $("#searchBtn").click(function(){
+        let admin={
 
-        var name=$("#searchName").val();
+            adminName:adminName.value,
+            adminEmail:adminEmail.value,
+            role:role.value
 
-        if(!name){
-            refresh();
-            return;
+        };
+
+        if(editingId==null){
+
+            fetch("/api/admins",{
+                method:"POST",
+                headers:{"Content-Type":"application/json"},
+                body:JSON.stringify(admin)
+            }).then(loadAdmins);
+
+        }else{
+
+            fetch(`/api/admins/${editingId}`,{
+                method:"PUT",
+                headers:{"Content-Type":"application/json"},
+                body:JSON.stringify(admin)
+            }).then(()=>{
+                editingId=null;
+                loadAdmins();
+            });
+
         }
 
-        $.get(API+"/search?name="+name,function(data){
+    }
 
-            var rows="";
+    function editAdmin(id,name,email,roleValue){
 
-            for(var i=0;i<data.length;i++){
+        adminName.value=name;
+        adminEmail.value=email;
+        role.value=roleValue;
 
-                var a=data[i];
+        editingId=id;
 
-                rows+=`
-<tr>
-<td>${a.adminID}</td>
-<td>${a.adminName}</td>
-<td>${a.adminEmail}</td>
-<td>${a.role}</td>
-</tr>
-`;
+    }
 
-            }
+    function deleteAdmin(id){
 
-            $("#adminTable").html(rows);
+        fetch(`/api/admins/${id}`,{
+            method:"DELETE"
+        }).then(loadAdmins);
 
-        });
+    }
 
-    });
+    function searchAdmin(){
 
+        fetch(`/api/admins/search?name=${searchBox.value}`)
+            .then(res=>res.json())
+            .then(renderAdmins);
 
-    $("#resetBtn").click(function(){
+    }
 
-        $("#searchName").val("");
-        refresh();
-
-    });
-
-
-    $(document).ready(refresh);
+    loadAdmins();
 
 </script>
 
