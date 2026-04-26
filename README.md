@@ -1,4 +1,4 @@
-# Campus Event Organizer Platform | ISTE 240.600 | Spring Semester 2026 | Group 3
+# Campus Event Organizer Platform | ISTE 240.600 | Group 3
 ### A full-stack web application built with Java Spring Boot and MySQL that allows university clubs and organizers to create and manage campus events while students can discover, register, and track activities.
 **Merge Manager - Haya Khan 746008798**
 Haya Khan — 746008798
