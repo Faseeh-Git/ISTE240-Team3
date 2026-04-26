@@ -182,6 +182,7 @@
             });
         }
         $("#saveBtn").click(function () {
+            var id = $("#studentID").val();
 
             var student = {
                 name: $("#name").val(),
@@ -190,8 +191,8 @@
             };
 
             $.ajax({
-                url: API,
-                type: "POST",
+                url: id ? API + "/" + id : API,
+                type: id ? "PUT" : "POST",
                 contentType: "application/json",
                 data: JSON.stringify(student),
                 success: function () {
@@ -199,7 +200,6 @@
                     refresh();
                 }
             });
-
         });
         // 3. DELETE: $.ajax for Delete
         function deleteStudent(id) {
