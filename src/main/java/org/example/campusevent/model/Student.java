@@ -1,30 +1,45 @@
+// Haya Khan 746008798
 package org.example.campusevent.model;
 
-import org.springframework.stereotype.Component;
+import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 
+@Entity
+@Table(name= "students")
 public class Student {
-    private int studentID;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long studentID;
+
+    @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(name = "email", nullable = false)
     private String email;
+
+    @Column(name = "major", nullable = false)
     private String major;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Enrollment> enrollments = new ArrayList<>();
+
 
     public Student() { }
 
-    public Student(int studentID, String name, String email, String major){
+    public Student(Long studentID, String name, String email, String major){
         this.studentID = studentID;
         this.name = name;
         this.email = email;
         this.major = major;
     }
 
-    public int getStudentID(){
+    public Long getStudentID(){
         return studentID;
     }
 
-    public void setStudentID(int studentID) {
-        this.studentID = studentID;
-    }
+    public void setStudentID(Long studentID) {this.studentID = studentID;}
 
     public String getName() {
         return name;
