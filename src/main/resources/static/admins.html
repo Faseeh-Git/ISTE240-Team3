@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admins</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Registry</title>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <style>
         body {
@@ -15,6 +18,17 @@
         .container {
             width: 90%;
             margin: auto;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .col {
+            flex: 1;
+            min-width: 200px;
         }
 
         .header {
@@ -50,6 +64,10 @@
             background: #e05a00;
         }
 
+        .btn-secondary {
+            background: gray;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -73,22 +91,49 @@
 <body>
 
 <div class="header">
-    <h1 style="color:#ff6a00;">Admin List</h1>
+    <h1 style="color:#ff6a00;">Campus Admin Registry</h1>
 </div>
 
 <div class="container">
 
     <div class="card">
+        <h3>Register New Admin</h3>
 
-        <input type="text" id="searchBox" placeholder="Search admin by name">
-        <button class="btn" onclick="searchAdmin()">Search</button>
+        <div class="row">
+            <div class="col">
+                <input type="text" id="adminName" placeholder="Admin Name">
+            </div>
 
-        <br><br>
+            <div class="col">
+                <input type="email" id="adminEmail" placeholder="Admin Email">
+            </div>
 
-        <button class="btn" onclick="loadAdmins()">Show All Admins</button>
+            <div class="col">
+                <input type="text" id="role" placeholder="Role">
+            </div>
 
-        <br><br>
+            <div class="col">
+                <button class="btn" id="saveBtn">Save</button>
+            </div>
+        </div>
+    </div>
 
+
+    <div class="card">
+        <div class="row">
+            <div class="col" style="flex:2;">
+                <input type="text" id="searchName" placeholder="Search by name">
+            </div>
+
+            <div class="col" style="flex:1; display:flex; gap:10px;">
+                <button class="btn" id="searchBtn">Search</button>
+                <button class="btn-secondary" id="resetBtn">Reset</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="card">
         <table>
             <thead>
             <tr>
@@ -101,64 +146,89 @@
 
             <tbody id="adminTable"></tbody>
         </table>
-
     </div>
 
     <button class="btn" onclick="window.location.href='index.html'">Back</button>
 
 </div>
 
+
 <script>
 
-    function loadAdmins() {
+    var API="/api/admins";
 
-        fetch('/api/admins')
-            .then(response => response.json())
-            .then(data => {
+    function refresh(){
 
-                let table = document.getElementById('adminTable');
-                table.innerHTML = '';
+        $.get(API,function(data){
 
-                data.forEach(admin => {
+            var rows="";
 
-                    table.innerHTML += `
+            for(var i=0;i<data.length;i++){
+
+                var a=data[i];
+
+                rows+=`
 <tr>
-<td>${admin.adminID}</td>
-<td>${admin.adminName}</td>
-<td>${admin.adminEmail}</td>
-<td>${admin.role}</td>
+<td>${a.adminID}</td>
+<td>${a.adminName}</td>
+<td>${a.adminEmail}</td>
+<td>${a.role}</td>
 </tr>
 `;
-                });
-            });
+
+            }
+
+            $("#adminTable").html(rows);
+
+        });
+
     }
 
-    function searchAdmin() {
 
-        let name = document.getElementById("searchBox").value;
+    $("#searchBtn").click(function(){
 
-        fetch(`/api/admins/search?name=${name}`)
-            .then(response => response.json())
-            .then(data => {
+        var name=$("#searchName").val();
 
-                let table = document.getElementById('adminTable');
-                table.innerHTML = '';
+        if(!name){
+            refresh();
+            return;
+        }
 
-                data.forEach(admin => {
+        $.get(API+"/search?name="+name,function(data){
 
-                    table.innerHTML += `
+            var rows="";
+
+            for(var i=0;i<data.length;i++){
+
+                var a=data[i];
+
+                rows+=`
 <tr>
-<td>${admin.adminID}</td>
-<td>${admin.adminName}</td>
-<td>${admin.adminEmail}</td>
-<td>${admin.role}</td>
+<td>${a.adminID}</td>
+<td>${a.adminName}</td>
+<td>${a.adminEmail}</td>
+<td>${a.role}</td>
 </tr>
 `;
-                });
-            });
-    }
 
-    loadAdmins();
+            }
+
+            $("#adminTable").html(rows);
+
+        });
+
+    });
+
+
+    $("#resetBtn").click(function(){
+
+        $("#searchName").val("");
+        refresh();
+
+    });
+
+
+    $(document).ready(refresh);
 
 </script>
 
